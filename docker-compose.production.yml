@@ -1,9 +1,6 @@
-# docker-compose.yml
-version: '3'
-
 volumes:
   pg_data:
-  static:
+  static_value:
 
 services:
   db:
@@ -11,23 +8,24 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+
   backend:
-    build: ./backend/
+    image: estasenko/taski_backend:latest
     env_file: .env
     volumes:
-      - static:/backend_static
+      - static_value:/backend_static
 
   frontend:
+    image: estasenko/taski_frontend:latest
     env_file: .env
-    build: ./frontend/
     command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static:/frontend_static
+      - static_value:/frontend_static
 
   gateway:
-    build: ./gateway/
+    image: estasenko/taski_gateway:latest
     env_file: .env
     volumes:
-      - static:/staticfiles
+      - static_value:/staticfiles
     ports:
       - 8000:80
